@@ -100,13 +100,17 @@ def chargingRatePlot(filePath='/tmp/some.file', plotLabel = 'New Plot', legendLa
         times, measurements = getMeasurements(filePath)
         
         # plotting related stuff
-        pylab.figure(str(datetime.datetime.now()))
+        pylab.figure(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")), figsize=(22.0, 9.0))
         pylab.title(plotLabel)
         pylab.xlabel('time, hour')
         pylab.ylabel('current, A')
         pylab.grid(True)
         pylab.plot(times, measurements, '-b', label=legendLabel)
+        mng = pylab.get_current_fig_manager() # get figure manager for
+        mng.resize(*mng.window.maxsize())     # setting window size to max
+        # mng.full_screen_toggle()
         pylab.legend(loc='best') # should be placed after pylab.plot()
+        pylab.savefig(plotLabel + '_' + legendLabel +  '_' + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + '.png'), format='png', dpi=200)
         pylab.show()
 
     except IOError:
