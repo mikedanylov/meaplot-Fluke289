@@ -12,7 +12,7 @@ Flow of operation is the following:
 5. Read the file and plot a graph A(t)
 
 Script can be called using python from CLI.
-All option are self explanatory in the code. Also, help option contains short descriptions of all of them but I will mention them here just for convenience so that all info is gathered here.
+Help option contains short descriptions of all options. Also, they are quite self explanatory in the code but I will mention them here just for convenience so that all info is gathered here.
 
 ```bash
 usage: meaplotter.py [-h] [-f FILEPATH] [-p SERIALPORT] [-g GRAPHLABEL]
@@ -35,4 +35,4 @@ optional arguments:
 ```
 
 **TODO**
-- [ ] would be nice to be able to install this tool as rpm package which will install necessery python libraries as well
+- [ ] would be nice to be able to install this tool as rpm package which will install necessary python libraries as well
