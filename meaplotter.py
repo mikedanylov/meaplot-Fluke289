@@ -78,7 +78,10 @@ def serialRead(filePath='/tmp/some.file', port='/dev/ttyUSB0', readTime=10, samp
                 f.write(str(value_amperes) + ',' + str(datetime.datetime.now()) + '\n')
             except serial.SerialException:
                 print 'Error occured!\n'
-                continue        
+                continue
+            except ValueError:
+                print 'Lost value!'
+                continue
     except OSError:
         print 'ERROR: Multimeter is not connected!'
         print 'Check /dev/ folder for ttyUSBx port and do sudo chmod 777 /dev/ttyUSBx'
