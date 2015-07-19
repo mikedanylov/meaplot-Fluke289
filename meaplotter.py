@@ -5,7 +5,7 @@ import pylab
 import time
 import datetime
 import serial
-import argparse   
+import argparse
 
 def argsParser():
 
@@ -41,7 +41,7 @@ def argsParser():
         print 'Graph label is not specified. Default is set to New Graph'
     if args.legendLabel == None:
         args.legendLabel = 'New Legend Item'
-        print 'Legend label is not specified. Default is set to New Legend Item'   
+        print 'Legend label is not specified. Default is set to New Legend Item'
 
     return args
 
@@ -67,11 +67,12 @@ def serialRead(filePath='/tmp/some.file', port='/dev/ttyUSB0', readTime=10, samp
 
         start_time = time.time()
 
-        while (start_time + readTime) > time.time(): # code a timer here which will stop when readTime seconds is elapsed
+        # keep reading serial until specified time elapsed
+        while (start_time + readTime) > time.time():
             try:
                 line_from_serial = ""
                 ser.write("QM\r")
-                line_from_serial += ser.read(32) 
+                line_from_serial += ser.read(32)
                 line_from_serial = line_from_serial[2:-1] # cut '0\n'
                 # print line_from_serial
                 line_splited = line_from_serial.split(',')
@@ -87,8 +88,6 @@ def serialRead(filePath='/tmp/some.file', port='/dev/ttyUSB0', readTime=10, samp
     except OSError:
         print 'ERROR: Multimeter is not connected!'
         print 'Check /dev/ folder for ttyUSBx port and do sudo chmod 777 /dev/ttyUSBx'
-        print 'to allow not sudo user to read the port'
-        print 'WARNING: plot might be outdated...'
 
 
 def chargingRatePlot(filePath='/tmp/some.file', plotLabel = 'New Plot', legendLabel = 'Some charger'):
@@ -103,7 +102,7 @@ def chargingRatePlot(filePath='/tmp/some.file', plotLabel = 'New Plot', legendLa
     try:
         # check if file exists, throws exeption otherwise
         times, measurements = getMeasurements(filePath)
-        
+
         # plotting related stuff
         pylab.figure(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")), figsize=(22.0, 9.0))
         pylab.title(plotLabel)
@@ -134,7 +133,7 @@ def getMeasurements(filePath):
     measurements = []
     counter = 0 # counter to keep track of lines
     PRESCALER = 1 # allows to read only N-th line from measurements
-        
+
     for line in dataFile:
         # read only each N-th line
         if counter % PRESCALER == 0:

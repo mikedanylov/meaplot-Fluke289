@@ -6,7 +6,7 @@ This simple peace of software allows to read current values from Fluke 289 multi
 Flow of operation is the following:
 
 1. Send request to multimeter 'QM\r'
-2. Receive a response '1.0327E0,ADC,NORMAL,NONE' (where the only thing we actualy need is floating point number 1.0327E0 which represents current value in Amperes)
+2. Receive a response '1.0327E0,ADC,NORMAL,NONE' (where the only thing we actually need is floating point number 1.0327E0 which represents current value in Amperes)
 3. Add timestamps to each value
 4. Save measurements one by one to a file
 5. Read the file and plot a graph A(t)
@@ -29,7 +29,7 @@ optional arguments:
   -l LEGENDLABEL, --legendLabel LEGENDLABEL
                         name of the plot in legend
   -s SAMPLES, --samples SAMPLES
-                        N of measurements/second
+                        N of measurements/second [0; 25]
   -d DURATION, --duration DURATION
                         duration of measurement in seconds [10; 86400]
 ```
