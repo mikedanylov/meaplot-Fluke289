@@ -16,8 +16,6 @@ def argsParser():
         help="port on which Fluke 289 is connected")
     parser.add_argument('-g', '--graphLabel', type=str,
         help="name of the graph")
-    parser.add_argument('-l', '--legendLabel', type=str,
-        help="name of the plot in legend")
     parser.add_argument('-s', '--samples', type=int,
         help="N of measurements/second")
     parser.add_argument('-d', '--duration', type=int,
@@ -39,9 +37,6 @@ def argsParser():
     if args.graphLabel == None:
         args.graphLabel = 'New Graph'
         print 'Graph label is not specified. Default is set to New Graph'
-    if args.legendLabel == None:
-        args.legendLabel = 'New Legend Item'
-        print 'Legend label is not specified. Default is set to New Legend Item'
 
     return args
 
@@ -90,7 +85,7 @@ def serialRead(filePath='/tmp/some.file', port='/dev/ttyUSB0', readTime=10, samp
         print 'Check /dev/ folder for ttyUSBx port and do sudo chmod 777 /dev/ttyUSBx'
 
 
-def chargingRatePlot(filePath='/tmp/some.file', plotLabel = 'New Plot', legendLabel = 'Some charger'):
+def chargingRatePlot(filePath='/tmp/some.file', plotLabel = 'New Plot'):
     '''
     Plots a graph A(t)
     where:
@@ -99,22 +94,25 @@ def chargingRatePlot(filePath='/tmp/some.file', plotLabel = 'New Plot', legendLa
     Throws IOError exeption if file doesn't exist
     returns None
     '''
+
     try:
         # check if file exists, throws exeption otherwise
         times, measurements = getMeasurements(filePath)
-
+        average = sum(measurements) / len(measurements)
+        print('avg = ' + str(average))
         # plotting related stuff
         pylab.figure(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")), figsize=(22.0, 9.0))
         pylab.title(plotLabel)
         pylab.xlabel('time, hour')
         pylab.ylabel('current, A')
         pylab.grid(True)
-        pylab.plot(times, measurements, '-b', label=legendLabel)
+        legend_label = 'avg=' + str("{0:.4f}".format(average)) + 'A'
+        pylab.plot(times, measurements, '-b', label=legend_label)
         mng = pylab.get_current_fig_manager() # get figure manager for
-        mng.resize(*mng.window.maxsize())     # setting window size to max
-        # mng.full_screen_toggle()
+        # mng.resize(*mng.window.maxsize())     # setting window size to max
+        mng.full_screen_toggle()
         pylab.legend(loc='best') # should be placed after pylab.plot()
-        pylab.savefig(plotLabel + '_' + legendLabel +  '_' + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + '.png'), format='png', dpi=200)
+        pylab.savefig(plotLabel + ' ' + legend_label + '.png', format='png', dpi=200)
         pylab.show()
 
     except IOError:
@@ -140,7 +138,7 @@ def getMeasurements(filePath):
             line = line[:-1] # cut \n from the end of the line
             value, time = line.split(',')
             times.append(datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f"))
-            measurements.append(value)
+            measurements.append(float(value))
             counter += 1
     return (times, measurements)
 
@@ -148,10 +146,8 @@ def getMeasurements(filePath):
 def main():
 
     args = argsParser()
-    # serialRead('/tmp/serial_data.txt', '/dev/ttyUSB0', 15, 10)
-    # chargingRatePlot('/tmp/serial_data.txt', 'Tablet charging 1A', 'Phihong charger')
     serialRead(args.filePath, args.serialPort, args.duration, args.samples)
-    chargingRatePlot(args.filePath, args.graphLabel, args.legendLabel)
+    chargingRatePlot(args.filePath, args.graphLabel)
 
 if __name__ == "__main__":
     main()
